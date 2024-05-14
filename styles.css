@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    background-image: url('mainbg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative; /* Ensure positioning context for ::after pseudo-element */
+}
+
+html::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(14, 13, 13, 0.635); /* Adjust the alpha value for transparency */
+    z-index: -1; /* Ensure the overlay is behind the content */
+}
+
+
+header {
+    background-color:#565454;
+    color: #fff;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 20;
+    display: flex; /* Make the menu items a flex container */
+    justify-content: space-between; /* Distribute space evenly between menu items */
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to menu items */
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px; /* Add padding to menu items */
+    border-radius: 5px; /* Add border-radius for rounded corners */
+    transition: background-color 0.3s; /* Add transition for hover effect */
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Change background color on hover */
+}
+
+main {
+    padding: 20px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.features {
+    margin-bottom: 40px;
+}
+
+.features h2 {
+    margin-bottom: 10px;
+}
+
+.features ul {
+    list-style-type: none;
+}
+
+.call-to-action {
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.overlay {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    z-index: 9999; /* Ensure the footer is above other content */
+    font-size: 14px; /* Adjust the font size as needed */
+}

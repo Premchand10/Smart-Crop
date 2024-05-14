@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Suggestion System</title>
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative; /* Ensure positioning context for ::after pseudo-element */
+}
+
+html::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(14, 13, 13, 0.635); /* Adjust the alpha value for transparency */
+    z-index: -1; /* Ensure the overlay is behind the content */
+}
+
+
+.container {
+    max-width: 600px;
+    margin: 20px 0 20px auto; /* Adjusted margin to move container to the right */
+    padding: 20px;
+    box-sizing: border-box;
+    color: rgb(255, 255, 255);
+}
+
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+select, input[type="number"], button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#output {
+    display: none;
+    border: 2px solid #007bff;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: black;
+}
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    text-decoration: none;
+}
+
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">&larr; Back</a>
+    <div class="container">
+    <h1>Crop Suggestion System</h1>
+    <div class="form-container">
+        <form id="cropForm">
+        <label for="climate">Climate:</label>
+        <select id="climate">
+            <option value="tropical">Tropical</option>
+            <option value="temperate">Temperate</option>
+            <option value="arid">Arid</option>
+        </select><br>
+        <label for="soil">Soil Type:</label>
+        <select id="soil">
+            <option value="sandy">Sandy</option>
+            <option value="loamy">Loamy</option>
+            <option value="clayey">Clayey</option>
+        </select><br>
+        <label for="water">Water Availability:</label>
+        <select id="water">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select><br>
+        <label for="ph">Soil pH:</label>
+        <input type="number" id="ph" step="0.1" min="0" max="14" placeholder="Enter pH value"><br>
+        <button type="button" onclick="suggestCrop()">Get Crop Suggestion</button>
+    </form>
+    <div id="output"></div>
+</div>
+</div>
+
+    <script>
+        function suggestCrop() {
+    var climate = document.getElementById("climate").value;
+    var soil = document.getElementById("soil").value;
+    var water = document.getElementById("water").value;
+    var pH = parseFloat(document.getElementById("ph").value);
+
+    // Define rules for crop suggestions based on input factors
+    var rules = [
+    { conditions: { climate: "temperate", soil: "sandy", water: "medium", pH: { min: 6.0, max: 7.5 } }, crop: "Rye", moisture: 60 },
+    { conditions: { climate: "arid", soil: "sandy", water: "low", pH: { min: 6.5, max: 8.0 } }, crop: "Chickpeas", moisture: 40 },
+    { conditions: { climate: "tropical", soil: "clayey", water: "high", pH: { min: 5.5, max: 6.5 } }, crop: "Rubber", moisture: 80 },
+    { conditions: { climate: "temperate", soil: "loamy", water: "high", pH: { min: 6.0, max: 7.5 } }, crop: "Flax", moisture: 70 },
+    { conditions: { climate: "arid", soil: "sandy", water: "low", pH: { min: 6.5, max: 8.0 } }, crop: "Pistachios", moisture: 30 },
+    { conditions: { climate: "tropical", soil: "sandy", water: "medium", pH: { min: 5.5, max: 6.5 } }, crop: "Vanilla", moisture: 60 },
+    { conditions: { climate: "temperate", soil: "loamy", water: "high", pH: { min: 6.0, max: 7.5 } }, crop: "Quinoa", moisture: 70 },
+    { conditions: { climate: "tropical", soil: "sandy", water: "high", pH: { min: 0, max: 14 } }, crop: "Coconut", moisture: 80 },
+    { conditions: { climate: "tropical", soil: "sandy", water: "medium", pH: { min: 0, max: 14 } }, crop: "Banana", moisture: 60 },
+    { conditions: { climate: "tropical", soil: "sandy", water: "low", pH: { min: 0, max: 14 } }, crop: "Rice", moisture: 40 },
+    { conditions: { climate: "tropical", soil: "loamy", water: "high", pH: { min: 0, max: 14 } }, crop: "Pineapple", moisture: 80 },
+    { conditions: { climate: "tropical", soil: "loamy", water: "medium", pH: { min: 0, max: 14 } }, crop: "Papaya", moisture: 60 },
+    { conditions: { climate: "tropical", soil: "loamy", water: "low", pH: { min: 0, max: 14 } }, crop: "Cassava", moisture: 40 },
+    { conditions: { climate: "tropical", soil: "clayey", water: "high", pH: { min: 0, max: 14 } }, crop: "Rubber", moisture: 80 },
+    { conditions: { climate: "tropical", soil: "clayey", water: "medium", pH: { min: 0, max: 14 } }, crop: "Sugarcane", moisture: 60 },
+    { conditions: { climate: "tropical", soil: "clayey", water: "low", pH: { min: 0, max: 14 } }, crop: "Taro", moisture: 40 },
+    { conditions: { climate: "tropical", soil: "sandy", water: "high", pH: { min: 0, max: 14 } }, crop: "Coconut", moisture: 80 },
+    { conditions: { climate: "temperate", soil: "sandy", water: "high", pH: { min: 0, max: 14 } }, crop: "Potato", moisture: 80 },
+    { conditions: { climate: "arid", soil: "sandy", water: "high", pH: { min: 0, max: 14 } }, crop: "Sorghum", moisture: 80 },
+    { conditions: { climate: "tropical", soil: "loamy", water: "high", pH: { min: 0, max: 14 } }, crop: "Pineapple", moisture: 80 },
+    { conditions: { climate: "temperate", soil: "loamy", water: "medium", pH: { min: 0, max: 14 } }, crop: "Soybean", moisture: 60 },
+    { conditions: { climate: "arid", soil: "loamy", water: "low", pH: { min: 0, max: 14 } }, crop: "Date Palm", moisture: 40 },
+    { conditions: { climate: "tropical", soil: "clayey", water: "high", pH: { min: 0, max: 14 } }, crop: "Rubber", moisture: 80 },
+    { conditions: { climate: "temperate", soil: "clayey", water: "medium", pH: { min: 0, max: 14 } }, crop: "Cherry", moisture: 60 },
+    { conditions: { climate: "arid", soil: "clayey", water: "low", pH: { min: 0, max: 14 } }, crop: "Tamarind", moisture: 40 },
+    { conditions: { climate: "tropical", soil: "sandy", water: "high", pH: { min: 0, max: 14 } }, crop: "Coconut", moisture: 80 },
+    { conditions: { climate: "temperate", soil: "loamy", water: "high", pH: { min: 0, max: 14 } }, crop: "Wheat", moisture: 80 },
+    { conditions: { climate: "arid", soil: "clayey", water: "high", pH: { min: 0, max: 14 } }, crop: "Date Palm", moisture: 80 },
+    { conditions: { climate: "tropical", soil: "loamy", water: "medium", pH: { min: 0, max: 14 } }, crop: "Pineapple", moisture: 60 },
+    { conditions: { climate: "temperate", soil: "sandy", water: "medium", pH: { min: 0, max: 14 } }, crop: "Potato", moisture: 60 },
+    { conditions: { climate: "arid", soil: "sandy", water: "medium", pH: { min: 0, max: 14 } }, crop: "Sorghum", moisture: 60 },
+    { conditions: { climate: "tropical", soil: "clayey", water: "low", pH: { min: 0, max: 14 } }, crop: "Rubber", moisture: 40 },
+    { conditions: { climate: "temperate", soil: "loamy", water: "low", pH: { min: 0, max: 14 } }, crop: "Barley", moisture: 40 },
+    { conditions: { climate: "arid", soil: "sandy", water: "low", pH: { min: 0, max: 14 } }, crop: "Almond", moisture: 40 },
+];
+
+    // Find the first crop suggestion that matches all conditions
+    var suggestedCrop = "No crop suggestion available";
+    var suggestedCrop = "No crop suggestion available";
+            var suggestedMoisture = "N/A";
+            for (var i = 0; i < rules.length; i++) {
+                var conditions = rules[i].conditions;
+                if (climate === conditions.climate &&
+                    soil === conditions.soil &&
+                    water === conditions.water &&
+                    pH >= conditions.pH.min &&
+                    pH <= conditions.pH.max) {
+                    suggestedCrop = rules[i].crop;
+                    suggestedMoisture = rules[i].moisture;
+                    break;
+                }
+            }
+
+            document.getElementById("output").innerHTML = "Based on the input factors, we suggest growing: <strong>" + suggestedCrop + "</strong>.<br> Moisture needed: <strong>" + suggestedMoisture + "%</strong>";
+
+            // Show the output box
+            document.getElementById("output").style.display = "block";
+    var container = document.querySelector(".container");
+    container.appendChild(output);
+}
+
+    </script>
+    
+</body>
+</html>

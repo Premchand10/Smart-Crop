@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Moisture</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('soil.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative; /* Ensure positioning context for ::after pseudo-element */
+}
+
+html::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure the overlay is behind the content */
+}
+#soilMoisture {
+    width: 300px; /* Increased width */
+    height: 300px; /* Increased height */
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    position: relative;
+    margin: 80px auto; /* Increased margin from the top */
+    right: -15%; /* Move the circle to the right */
+    top: 40px; /* Move the circle slightly lower */
+}
+
+
+#moistureLevel {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    font-size: 26px;
+    font-weight: bold;
+    color: #000000;
+}
+
+#motorStatus {
+    position:absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    color: #000;
+}
+.back-button {
+    position: absolute;
+    top: -50px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    text-decoration: none;
+}
+
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">&larr; Back</a>
+    <div class="container">
+        <div id="soilMoisture">
+            <div id="moistureLevel">Loading...</div>
+            <div id="motorStatus">Motor Status: Loading...</div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to fetch data from soil.php and update the page
+        function fetchData() {
+            var url = "soil.php";
+            fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text(); // Retrieve plain text response
+            })
+            .then(data => {
+                // Split the response by '<br>' to separate moisture level and motor status
+                var values = data.split('<br>');
+                document.getElementById("moistureLevel").textContent = values[0];
+                document.getElementById("motorStatus").textContent = values[1];
+                // Extract the moisture level percentage to set the background gradient
+                var moistureLevel = parseInt(values[0].split(':')[1]);
+                document.getElementById("soilMoisture").style.background = `conic-gradient(#007bff ${moistureLevel}%, #f0f0f0 ${moistureLevel}% 100%)`;
+            })
+            .catch(error => {
+                document.getElementById("moistureLevel").textContent = "Error: " + error.message;
+                document.getElementById("motorStatus").textContent = "Motor Status: Error";
+            });
+        }
+
+        // Initial fetch
+        fetchData();
+
+        // Set interval to refresh every 1 second
+        setInterval(fetchData, 1000);
+    });
+</script>
+</body>
+</html>
